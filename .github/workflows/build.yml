@@ -1,0 +1,41 @@
+name: Build Phoenix Client
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Put files back into folders (only does something if they were uploaded flat)
+        run: |
+          python3 - <<'PY'
+          import os, re, shutil, glob
+          def mv(src, dst):
+              if os.path.exists(src):
+                  os.makedirs(os.path.dirname(dst), exist_ok=True)
+                  shutil.move(src, dst)
+          for f in glob.glob('*.java'):
+              t = open(f, encoding='utf8').read()
+              m = re.search(r'^package\s+([\w.]+);', t, re.M)
+              mv(f, 'src/main/java/' + m.group(1).replace('.', '/') + '/' + f)
+          mv('fabric.mod.json', 'src/main/resources/fabric.mod.json')
+          mv('phoenix.mixins.json', 'src/main/resources/phoenix.mixins.json')
+          mv('en_us.json', 'src/main/resources/assets/phoenix/lang/en_us.json')
+          mv('icon.png', 'src/main/resources/assets/phoenix/icon.png')
+          mv('gradle-wrapper.jar', 'gradle/wrapper/gradle-wrapper.jar')
+          mv('gradle-wrapper.properties', 'gradle/wrapper/gradle-wrapper.properties')
+          PY
+      - name: Build
+        run: |
+          chmod +x gradlew
+          ./gradlew build --no-daemon --stacktrace
+      - name: Upload the mod jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: phoenix-client-jar
+          path: build/libs/phoenix-client-1.0.0.jar
