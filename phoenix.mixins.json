@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "package": "dev.phoenix.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "MinecraftClientAccessor",
+    "LivingEntityAccessor",
+    "ClientPlayerInteractionManagerAccessor",
+    "GameRendererAccessor",
+    "GameRendererMixin",
+    "EntityMixin",
+    "LivingEntityMixin",
+    "ClientPlayerInteractionManagerMixin",
+    "InGameHudMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

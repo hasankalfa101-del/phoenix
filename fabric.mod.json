@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "phoenix",
+  "version": "${version}",
+  "name": "Phoenix Client",
+  "description": "Utility client for Minecraft 1.21.11 with a ClickGUI, modules, HUD and config.",
+  "authors": ["Phoenix"],
+  "license": "MIT",
+  "icon": "assets/phoenix/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["dev.phoenix.PhoenixClient"]
+  },
+  "mixins": [
+    { "config": "phoenix.mixins.json", "environment": "client" }
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.0",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
